@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { buscarPessoas } from './CRUD/PessoaCRUD';
+import { Link } from 'react-router-dom';
 
 const Login = () => {
   const [usuario, setUsuario] = useState('');
@@ -51,6 +52,11 @@ const Login = () => {
         required
       />
       <button onClick={handleLogin}>Entrar</button>
+
+      {/* Link para a página de Cadastro */}
+      <p>
+        Não tem uma conta? <Link to="/register">Cadastre-se</Link>
+      </p>
     </div>
   );
 };

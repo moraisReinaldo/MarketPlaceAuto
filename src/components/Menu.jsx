@@ -97,11 +97,10 @@ const Menu = () => {
                 <p>{anuncio.desc}</p>
                 <p>{anuncio.ano} - {anuncio.versao}</p>
                 <p><em>Proprietário: {dono ? dono.nome : 'Desconhecido'}</em></p>
-              </div>
-
-              {user && anuncio.CodPessoa === user.CodPessoa && (
+                {user && anuncio.CodPessoa === user.CodPessoa && (
                 <button onClick={() => handleDelete(anuncio.CodAnuncio)} className="delete-button">Apagar Anúncio</button>
               )}
+              </div>
             </li>
           );
         })}

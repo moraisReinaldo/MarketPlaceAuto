@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { buscarChats, enviarMensagem } from './CRUD/ChatCRUD';
 import { buscarPessoas } from './CRUD/PessoaCRUD';
 import { buscarMensagens } from './CRUD/MensagemCRUD';
@@ -117,7 +118,7 @@ const Chats = () => {
   return (
     <div>
       <h2>Chats</h2>
-
+      
       <div>
         <label>Escolha o destinatário:</label>
         <select
@@ -181,6 +182,7 @@ const Chats = () => {
           </div>
         )}
       </div>
+      <Link to="/menu"> <button className="login-btn">Retornar ao menu</button> </Link>
     </div>
   );
 };

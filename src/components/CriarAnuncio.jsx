@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 import { criarAnuncio } from './CRUD/AnuncioCRUD';
 import './CSS/CriarAnuncio.css'; // Adicionando o CSS para este componente
@@ -123,6 +124,7 @@ const CriarAnuncio = () => {
           />
         </div>
         <button type="submit" className="submit-button">Criar Anúncio</button>
+        <Link to="/menu"> <button className="login-btn">Retornar ao menu</button> </Link>
       </form>
     </div>
   );
