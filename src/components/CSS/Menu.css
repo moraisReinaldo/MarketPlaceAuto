@@ -1,0 +1,92 @@
+/* Menu.css */
+.menu-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: var(--background-color);
+  }
+  
+  .menu-header h2 {
+    font-size: 2.5em;
+    margin-bottom: 10px;
+  }
+  
+  .menu-header h3 {
+    font-size: 1.2em;
+    margin-top: 0;
+    color: var(--primary-text-color);
+  }
+  
+  .button-group {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+  }
+  
+  button {
+    padding: 10px 20px;
+    font-size: 1em;
+    font-weight: 500;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #646cff;
+    color: white;
+  }
+  
+  .logout-button {
+    background-color: #e60000;
+    color: white;
+  }
+  
+  .create-anuncio-button {
+    background-color: #28a745;
+    color: white;
+  }
+  
+  .chat-button {
+    background-color: #007bff;
+    color: white;
+  }
+  
+  .anuncios-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .anuncio-item {
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 10px;
+    background-color: #1a1a1a;
+    border-radius: 8px;
+  }
+  
+  .anuncio-img {
+    width: 100px;
+    height: auto;
+    border-radius: 8px;
+  }
+  
+  .anuncio-info p {
+    color: var(--primary-text-color);
+  }
+  
+  .delete-button {
+    background-color: #dc3545;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .delete-button:hover {
+    background-color: #c82333;
+  }
+  

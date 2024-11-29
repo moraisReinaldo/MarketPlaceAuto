@@ -1,0 +1,12 @@
+Como ligar o projeto: 
+
+-- Abrir pasta e criar dois terminais 
+
+em um, rodar: node src/BackEndJs/server.js 
+que liga a conecção com o banco 
+
+no outro, iniciar o react: npm run dev
+
+se precizar manuzear o banco abrir outro terminal e rodar: python src\BackEndPy\crud.py 
+
+se apagar o banco abrir outro terminal e rodar: python src\BackEndPy\criar_banco.py
