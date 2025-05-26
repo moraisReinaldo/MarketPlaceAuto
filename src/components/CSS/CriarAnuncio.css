@@ -1,79 +1,94 @@
-/* CriarAnuncio.css */
-.criar-anuncio-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 30px;
-    background-color: var(--background-color);
-    border-radius: 8px;
-    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
-    width: 100%; /* Garante que o container ocupe toda a largura disponível */
-    box-sizing: border-box; /* Inclui o padding no cálculo da largura */
+/* CriarAnuncio.css - Estilos Modernizados para o Formulário */
+
+/* Estilos específicos para o formulário de criação de anúncio */
+.card {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.3s ease;
+}
+
+.card:hover {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* Melhorias nos campos do formulário */
+.form-control:focus, .form-select:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+}
+
+/* Estilização para o campo de fotos */
+textarea[name="fotos"] {
+  font-family: var(--font-family-monospace);
+  font-size: 0.9rem;
+  line-height: 1.5;
+}
+
+/* Botões com efeito de hover melhorado */
+.btn-primary {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  transition: all 0.2s ease;
+}
+
+.btn-primary:hover {
+  background-color: #0069d9;
+  border-color: #0062cc;
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background-color: var(--secondary-color);
+  border-color: var(--secondary-color);
+  transition: all 0.2s ease;
+}
+
+.btn-secondary:hover {
+  background-color: #5a6268;
+  border-color: #545b62;
+  transform: translateY(-2px);
+}
+
+/* Ajustes para modo escuro */
+@media (prefers-color-scheme: dark) {
+  .card {
+    background-color: var(--dark-card-bg);
+    border-color: var(--dark-border);
+  }
+  
+  .form-control, .form-select {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-color: var(--dark-border);
+    color: var(--dark-text);
+  }
+  
+  .form-control:focus, .form-select:focus {
+    background-color: rgba(255, 255, 255, 0.1);
+  }
+  
+  .form-text {
+    color: rgba(255, 255, 255, 0.6);
+  }
+}
+
+/* Melhorias de espaçamento e layout */
+.form-label {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  color: var(--secondary-color);
+}
+
+/* Animação suave nos elementos do formulário */
+.form-control, .form-select, .btn {
+  transition: all 0.3s ease;
+}
+
+/* Responsividade aprimorada */
+@media (max-width: 768px) {
+  .card {
+    padding: 1rem !important;
   }
   
   h2 {
-    font-size: 2em;
-    margin-bottom: 20px;
-    text-align: center; /* Centraliza o título */
+    font-size: 1.5rem;
   }
-  
-  .anuncio-form {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 15px; /* Espaçamento entre os campos de input */
-  }
-  
-  .input-group {
-    width: 100%;
-  }
-  
-  .input-field {
-    width: 100%;
-    padding: 12px;
-    font-size: 1em;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #fff;
-    transition: border-color 0.3s ease;
-    box-sizing: border-box; /* Inclui o padding no cálculo da largura */
-  }
-  
-  .input-field:focus {
-    border-color: #007bff;
-    outline: none;
-  }
-  
-  .submit-button {
-    padding: 12px;
-    font-size: 1.1em;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    width: 100%;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    box-sizing: border-box; /* Inclui o padding no cálculo da largura */
-  }
-  
-  .submit-button:hover {
-    background-color: #0056b3;
-  }
-  
-  @media (max-width: 500px) {
-    .criar-anuncio-container {
-      padding: 20px;
-    }
-  
-    .input-field {
-      font-size: 1em; /* Ajusta o tamanho da fonte para telas menores */
-    }
-  
-    .submit-button {
-      font-size: 1em; /* Ajusta o tamanho da fonte do botão */
-    }
-  }
-  
+}

@@ -5,6 +5,7 @@ Como ligar o projeto:
 em um, rodar: node src/BackEndJs/server.js 
 que liga a conecção com o banco 
 
+rodar npm install
 no outro, iniciar o react: npm run dev
 
 se precizar manuzear o banco abrir outro terminal e rodar: python src\BackEndPy\crud.py 

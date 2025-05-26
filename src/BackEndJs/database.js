@@ -1,49 +1,54 @@
-import { dirname, join } from 'path';  // Certifique-se de importar o join de 'path'
-import { fileURLToPath } from 'url';
-import sqlite3 from 'sqlite3';
+import mysql from 'mysql2/promise';
 
-// Caminho do diretório onde está o arquivo
-const __dirname = dirname(fileURLToPath(import.meta.url));
-
-// Caminho do banco de dados
-const dbPath = join(__dirname, '../assets/banco.db');
-
-// Caminho para o banco de dados
-
-const db = new sqlite3.Database(dbPath, (err) => {
-    if (err) {
-        console.error('Erro ao conectar ao banco de dados:', err.message);
-    } else {
-        console.log('Conectado ao banco SQLite.');
-    }
+// Criação do pool de conexões MySQL (em vez de uma única conexão)
+export const db = mysql.createPool({
+    host: 'localhost',
+    port: 3306,
+    user: 'root',
+    password: 'Reinaldohm1207$',
+    database: 'MarketplaceAuto',
+    waitForConnections: true,
+    connectionLimit: 10,
+    queueLimit: 0
 });
 
-// Função para realizar consultas SQL (SELECT)
-export const queryDB = (sql, params = []) => {
-    return new Promise((resolve, reject) => {
-        db.all(sql, params, (err, rows) => {
-            if (err) {
-                reject(err);  // Caso ocorra um erro na consulta
-            } else {
-                resolve(rows);  // Retorna as linhas da consulta
-            }
-        });
+// Testar conexão (opcional, pode ser removido após confirmar que funciona)
+try {
+    console.log('Tentando conectar ao banco MySQL...');
+    // Teste simples para garantir que o pool está funcionando
+    db.query('SELECT 1').then(() => {
+        console.log('Pool de conexões MySQL criado com sucesso.');
     });
+} catch (err) {
+    console.error('Erro ao criar pool de conexões MySQL:', err.message);
+}
+
+// Função para realizar SELECT
+export const queryDB = async (sql, params = []) => {
+    let conn;
+    try {
+        conn = await db.getConnection();
+        const [rows] = await conn.execute(sql, params);
+        return rows;
+    } catch (err) {
+        console.error(`Erro na consulta SQL: ${sql}`, params, err);
+        throw new Error(`Erro ao realizar consulta: ${err.message}`);
+    } finally {
+        if (conn) conn.release();
+    }
 };
 
-// Função para executar um comando de INSERT, UPDATE ou DELETE
-export const executeDB = async (query, params = []) => {
+// Função para INSERT, UPDATE, DELETE
+export const executeDB = async (sql, params = []) => {
+    let conn;
     try {
-        return await new Promise((resolve, reject) => {
-            db.run(query, params, function (err) {
-                if (err) {
-                    reject(err); // Caso ocorra um erro
-                } else {
-                    resolve(this.lastID); // Retorna o último ID inserido
-                }
-            });
-        });
+        conn = await db.getConnection();
+        const [result] = await conn.execute(sql, params);
+        return result; 
     } catch (err) {
-        throw new Error(`Erro ao executar a operação no banco de dados: ${err.message}`);
+        console.error(`Erro ao executar operação SQL: ${sql}`, params, err);
+        throw new Error(`Erro ao executar operação: ${err.message}`);
+    } finally {
+        if (conn) conn.release();
     }
 };

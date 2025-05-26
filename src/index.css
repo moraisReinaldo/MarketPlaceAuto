@@ -1,209 +1,259 @@
-/* Estilos gerais */
+/* index.css - Estilos Globais Modernizados */
+
 :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  /* Paleta de Cores (Exemplo - pode ser ajustada) */
+  --primary-color: #007bff; /* Azul primário */
+  --secondary-color: #6c757d; /* Cinza secundário */
+  --success-color: #28a745; /* Verde sucesso */
+  --danger-color: #dc3545; /* Vermelho perigo */
+  --warning-color: #ffc107; /* Amarelo aviso */
+  --info-color: #17a2b8; /* Azul info */
+
+  /* Cores de Fundo e Texto (Modo Claro) */
+  --light-bg: #f8f9fa;
+  --light-text: #212529;
+  --light-card-bg: #ffffff;
+  --light-border: #dee2e6;
+
+  /* Cores de Fundo e Texto (Modo Escuro) */
+  --dark-bg: #1a1d21; /* Um cinza escuro mais suave */
+  --dark-text: #e9ecef;
+  --dark-card-bg: #2c3034; /* Fundo do card escuro */
+  --dark-border: #495057;
+
+  /* Fontes */
+  --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-family-monospace: SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+
+  /* Espaçamento e Bordas */
+  --spacing-unit: 1rem; /* 16px por padrão */
+  --border-radius: 0.375rem; /* 6px */
+  --box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  --box-shadow-dark: 0 0.5rem 1rem rgba(0, 0, 0, 0.3);
+}
+
+/* Aplica cores base dependendo do esquema de cores */
+body {
+  font-family: var(--font-family-sans-serif);
+  line-height: 1.6;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Modo Claro (Padrão) */
 body {
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-start;
-  min-width: 320px;
-  min-height: 100vh;
-  background-color: var(--background-color);
-  color: var(--text-color);
-  font-family: inherit;
-  padding: 20px;
+  background-color: var(--light-bg);
+  color: var(--light-text);
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-  margin-bottom: 0.5em;
-}
-
-h2, h3, h4 {
-  font-size: 2em;
-  margin-bottom: 0.5em;
+input, textarea, select {
+  background-color: var(--light-card-bg);
+  color: var(--light-text);
+  border: 1px solid var(--light-border);
 }
 
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.card, .modal, .form-container /* Adicionar classes conforme necessário */ {
+  background-color: var(--light-card-bg);
+  border: 1px solid var(--light-border);
+  box-shadow: var(--box-shadow);
+}
+
+/* Modo Escuro */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: var(--dark-bg);
+    color: var(--dark-text);
+  }
+
+  input, textarea, select {
+    background-color: var(--dark-card-bg);
+    color: var(--dark-text);
+    border: 1px solid var(--dark-border);
+  }
+
+  input::placeholder, textarea::placeholder {
+      color: var(--secondary-color);
+  }
+
+  button {
+    /* Pode manter a cor primária ou ajustar */
+     background-color: var(--primary-color);
+     color: white;
+  }
+
+  button.secondary {
+      background-color: var(--secondary-color);
+  }
+  button.danger {
+      background-color: var(--danger-color);
+  }
+  /* ... outras variações de botão */
+
+  .card, .modal, .form-container {
+    background-color: var(--dark-card-bg);
+    border: 1px solid var(--dark-border);
+    box-shadow: var(--box-shadow-dark);
+  }
+
+  a {
+    color: var(--primary-color); /* Link mais visível no escuro */
+  }
+  a:hover {
+      filter: brightness(1.2);
+  }
+}
+
+/* Estilos Gerais para Elementos */
+h1, h2, h3, h4, h5, h6 {
+  margin-top: 0;
+  margin-bottom: calc(var(--spacing-unit) * 0.5);
   font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+  line-height: 1.2;
+}
+
+h1 { font-size: calc(1.375rem + 1.5vw); } /* Responsivo */
+h2 { font-size: calc(1.325rem + 0.9vw); }
+h3 { font-size: calc(1.275rem + 0.3vw); }
+h4 { font-size: 1.125rem; }
+
+@media (min-width: 1200px) {
+  h1 { font-size: 2.5rem; } /* Tamanho máximo */
+  h2 { font-size: 2rem; }
+  h3 { font-size: 1.75rem; }
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: var(--spacing-unit);
+}
+
+a {
+  text-decoration: none;
+  color: var(--primary-color);
+  transition: filter 0.2s ease-in-out;
+}
+a:hover {
+  filter: brightness(0.8);
+}
+
+/* Botões */
+button {
+  display: inline-block;
+  font-weight: 400;
+  line-height: 1.6;
+  text-align: center;
+  vertical-align: middle;
   cursor: pointer;
-  transition: border-color 0.25s;
-  margin-top: 1em;
+  user-select: none;
+  border: 1px solid transparent;
+  padding: calc(var(--spacing-unit) * 0.375) calc(var(--spacing-unit) * 0.75);
+  font-size: 1rem;
+  border-radius: var(--border-radius);
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  margin: calc(var(--spacing-unit) * 0.25);
 }
 
 button:hover {
-  border-color: #646cff;
+  filter: brightness(0.9);
 }
 
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+button:focus, button:focus-visible {
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(var(--primary-color-rgb, 0, 123, 255), 0.5); /* Ajustar RGB */
 }
 
-input, textarea {
-  padding: 0.8em;
-  font-size: 1em;
-  border-radius: 8px;
-  border: 1px solid #ddd;
-  margin-bottom: 1em;
+button:disabled {
+  opacity: 0.65;
+  pointer-events: none;
+}
+
+/* Formulários */
+input, textarea, select {
+  display: block;
   width: 100%;
-  max-width: 500px;
+  padding: calc(var(--spacing-unit) * 0.375) calc(var(--spacing-unit) * 0.75);
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.6;
+  border-radius: var(--border-radius);
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  box-sizing: border-box;
+  margin-bottom: var(--spacing-unit);
 }
 
-input:focus, textarea:focus {
-  outline: none;
-  border-color: #646cff;
+input:focus, textarea:focus, select:focus {
+  border-color: var(--primary-color);
+  outline: 0;
+  box-shadow: 0 0 0 0.25rem rgba(var(--primary-color-rgb, 0, 123, 255), 0.25); /* Ajustar RGB */
 }
 
+textarea {
+  resize: vertical;
+  min-height: calc(var(--spacing-unit) * 5);
+}
+
+/* Layout Container */
 .container {
-  max-width: 1200px;
   width: 100%;
+  padding-right: calc(var(--spacing-unit) * 0.75); /* Gutter */
+  padding-left: calc(var(--spacing-unit) * 0.75);
+  margin-right: auto;
+  margin-left: auto;
+  box-sizing: border-box;
 }
 
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  padding: 20px 0;
+/* Breakpoints (Exemplo) */
+@media (min-width: 576px) {
+  .container { max-width: 540px; }
+}
+@media (min-width: 768px) {
+  .container { max-width: 720px; }
+}
+@media (min-width: 992px) {
+  .container { max-width: 960px; }
+}
+@media (min-width: 1200px) {
+  .container { max-width: 1140px; }
+}
+@media (min-width: 1400px) {
+  .container { max-width: 1320px; }
 }
 
-.logo-img {
-  max-width: 150px;
-  height: auto;
+/* Utilitários */
+.text-center { text-align: center; }
+.mb-1 { margin-bottom: calc(var(--spacing-unit) * 0.25) !important; }
+.mb-2 { margin-bottom: calc(var(--spacing-unit) * 0.5) !important; }
+.mb-3 { margin-bottom: var(--spacing-unit) !important; }
+.mt-1 { margin-top: calc(var(--spacing-unit) * 0.25) !important; }
+.mt-2 { margin-top: calc(var(--spacing-unit) * 0.5) !important; }
+.mt-3 { margin-top: var(--spacing-unit) !important; }
+
+/* Remover estilos padrão do App.css que podem conflitar */
+#root {
+  max-width: none; /* Remover largura máxima */
+  margin: 0;
+  padding: 0; /* Remover padding */
+  text-align: left; /* Resetar alinhamento */
 }
 
-.nav ul {
-  display: flex;
-  gap: 20px;
-  list-style: none;
+/* Remover estilos de logo e card genéricos do App.css */
+.logo, .logo.react, .card, .read-the-docs {
+  /* Estilos removidos ou serão sobrescritos por componentes específicos */
 }
 
-.nav ul li a {
-  color: var(--text-color);
-  text-decoration: none;
-  font-weight: 500;
+@keyframes logo-spin {
+  /* Animação mantida se ainda for usada */
 }
 
-.nav ul li a:hover {
-  color: #646cff;
-}
 
-.main-content {
-  text-align: center;
-  max-width: 800px;
-  margin-top: 40px;
-}
-
-footer {
-  margin-top: 60px;
-  text-align: center;
-  font-size: 0.9em;
-  color: #888;
-}
-
-/* Estilos específicos para o formulário de cadastro */
-.register {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  max-width: 500px;  /* Tamanho máximo do formulário */
-  padding: 20px;
-  background-color: var(--background-color);
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombrinha para dar destaque */
-  margin: 0 auto; /* Garante que o formulário seja centralizado */
-}
-
-.register h2 {
-  font-size: 2.5em;
-  margin-bottom: 20px;
-  color: var(--text-color);
-}
-
-.register input {
-  width: 100%;
-  margin-bottom: 1.5em;
-}
-
-.register button {
-  width: 100%;
-  padding: 1em;
-  font-size: 1.2em;
-}
-
-.register p {
-  margin-top: 20px;
-  font-size: 1.1em;
-  color: #aaa;
-}
-
-.register p a {
-  color: #646cff;
-  text-decoration: none;
-}
-
-.register p a:hover {
-  color: #535bf2;
-}
-
-/* Estilos para o modo claro */
-@media (prefers-color-scheme: light) {
-  :root {
-    --background-color: #ffffff;
-    --text-color: #213547;
-  }
-
-  a:hover {
-    color: #747bff;
-  }
-
-  button {
-    background-color: #f9f9f9;
-    border-color: #ccc;
-  }
-}
-
-/* Estilos para o modo escuro */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background-color: #242424;
-    --text-color: rgba(255, 255, 255, 0.87);
-  }
-
-  button {
-    background-color: #1a1a1a;
-    border-color: transparent;
-  }
-
-  input, textarea {
-    background-color: #333;
-    border-color: #555;
-    color: #fff;
-  }
-
-  input:focus, textarea:focus {
-    border-color: #646cff;
-  }
-}

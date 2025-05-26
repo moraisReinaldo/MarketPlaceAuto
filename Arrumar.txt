@@ -1,0 +1,9 @@
+- Deletar conta 
+- Editar anuncio 
+- Filtro Anuncio 
+- Arrumar primeira mensagem 
+- Excluir conversa 
+
+
+- Melhorar interface
+- Criar criptografia 

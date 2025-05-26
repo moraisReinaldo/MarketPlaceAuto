@@ -1,0 +1,119 @@
+
+CREATE TABLE IF NOT EXISTS Pessoa (
+    CodPessoa INTEGER PRIMARY KEY AUTO_INCREMENT,
+    nome Varchar(60) NOT NULL,
+    usuario Varchar(60) NOT NULL UNIQUE,
+    senha Varchar(60) NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Modelo (
+    CodModelo INTEGER PRIMARY KEY AUTO_INCREMENT,
+    nome Varchar(60) NOT NULL UNIQUE
+);
+
+CREATE TABLE IF NOT EXISTS Versao (
+    CodVersao INTEGER PRIMARY KEY AUTO_INCREMENT,
+    nome Varchar(60) NOT NULL,
+    ano INTEGER NOT NULL,
+    CodModelo INTEGER NOT NULL,
+    FOREIGN KEY (CodModelo) REFERENCES Modelo(CodModelo)
+);
+
+CREATE TABLE IF NOT EXISTS Anuncio (
+    CodAnuncio INTEGER PRIMARY KEY AUTO_INCREMENT,
+    valor Decimal(10,2) NOT NULL,
+    descricao Varchar(60),
+    CodPessoa INTEGER NOT NULL,
+    CodVersao INTEGER NOT NULL,
+    FOREIGN KEY (CodPessoa) REFERENCES Pessoa(CodPessoa),
+    FOREIGN KEY (CodVersao) REFERENCES Versao(CodVersao)
+);
+
+CREATE TABLE IF NOT EXISTS FotoAnuncio (
+    CodFoto INTEGER PRIMARY KEY AUTO_INCREMENT,
+    CodAnuncio INTEGER NOT NULL,
+    linkFoto Varchar(3000) NOT NULL,
+    FOREIGN KEY (CodAnuncio) REFERENCES Anuncio(CodAnuncio)
+);
+
+CREATE TABLE IF NOT EXISTS Chat (
+    codChat INTEGER PRIMARY KEY AUTO_INCREMENT,
+    Codpessoa1 INTEGER NOT NULL,
+    Codpessoa2 INTEGER NOT NULL,
+    FOREIGN KEY (Codpessoa1) REFERENCES Pessoa(CodPessoa),
+    FOREIGN KEY (Codpessoa2) REFERENCES Pessoa(CodPessoa)
+);
+
+CREATE TABLE IF NOT EXISTS Mensagem (
+    codMensagem INTEGER PRIMARY KEY AUTO_INCREMENT,
+    codChat INTEGER NOT NULL,
+    codPessoa INTEGER NOT NULL,
+    texto Varchar(60) NOT NULL,
+    FOREIGN KEY (codChat) REFERENCES Chat(codChat),
+    FOREIGN KEY (codPessoa) REFERENCES Pessoa(CodPessoa)
+);
+
+
+use MarketplaceAuto;
+
+-- Modelos
+INSERT INTO Modelo (nome) VALUES 
+('Chevrolet Onix'),
+('Chevrolet Opala'),
+('Volkswagen Fusca'),
+('Volkswagen Gol'),
+('Fiat Uno'),
+('Fiat Palio'),
+('Ford Ka'),
+('Ford Fiesta'),
+('Renault Kwid'),
+('Toyota Corolla'),
+('Honda Civic'),
+
+-- Versões
+INSERT INTO Versao (nome, ano, CodModelo) VALUES
+-- Chevrolet Onix
+('Joy 1.0', 2020, (SELECT CodModelo FROM Modelo WHERE nome = 'Chevrolet Onix')),
+('LT 1.4', 2018, (SELECT CodModelo FROM Modelo WHERE nome = 'Chevrolet Onix')),
+('LTZ Turbo', 2021, (SELECT CodModelo FROM Modelo WHERE nome = 'Chevrolet Onix')),
+
+-- Chevrolet Opala
+('Diplomata 4.1', 1992, (SELECT CodModelo FROM Modelo WHERE nome = 'Chevrolet Opala')),
+('Comodoro 2.5', 1987, (SELECT CodModelo FROM Modelo WHERE nome = 'Chevrolet Opala')),
+
+-- VW Gol
+('Gol 1000 Mi', 2005, (SELECT CodModelo FROM Modelo WHERE nome = 'Volkswagen Gol')),
+('Gol GTS 1.8', 1994, (SELECT CodModelo FROM Modelo WHERE nome = 'Volkswagen Gol')),
+('Gol GTI Turbo', 2002, (SELECT CodModelo FROM Modelo WHERE nome = 'Volkswagen Gol')),
+
+-- VW Fusca
+('Fusca 1300L', 1978, (SELECT CodModelo FROM Modelo WHERE nome = 'Volkswagen Fusca')),
+('Fusca Itamar', 1996, (SELECT CodModelo FROM Modelo WHERE nome = 'Volkswagen Fusca')),
+
+-- Fiat Uno
+('Uno Mille Economy', 2011, (SELECT CodModelo FROM Modelo WHERE nome = 'Fiat Uno')),
+('Uno Turbo i.e.', 1996, (SELECT CodModelo FROM Modelo WHERE nome = 'Fiat Uno')),
+
+-- Fiat Palio
+('Palio ELX 1.0', 2008, (SELECT CodModelo FROM Modelo WHERE nome = 'Fiat Palio')),
+('Palio Sporting 1.6', 2014, (SELECT CodModelo FROM Modelo WHERE nome = 'Fiat Palio')),
+
+-- Ford Ka
+('Ka 1.0 SE', 2019, (SELECT CodModelo FROM Modelo WHERE nome = 'Ford Ka')),
+('Ka Street 1.0', 2002, (SELECT CodModelo FROM Modelo WHERE nome = 'Ford Ka')),
+
+-- Ford Fiesta
+('Fiesta Hatch 1.6', 2011, (SELECT CodModelo FROM Modelo WHERE nome = 'Ford Fiesta')),
+('Fiesta Sedan 1.0', 2006, (SELECT CodModelo FROM Modelo WHERE nome = 'Ford Fiesta')),
+
+-- Renault Kwid
+('Kwid Zen 1.0', 2022, (SELECT CodModelo FROM Modelo WHERE nome = 'Renault Kwid')),
+('Kwid Intense 1.0', 2020, (SELECT CodModelo FROM Modelo WHERE nome = 'Renault Kwid')),
+
+-- Toyota Corolla
+('Corolla XEi 2.0', 2021, (SELECT CodModelo FROM Modelo WHERE nome = 'Toyota Corolla')),
+('Corolla GLi 1.8', 2015, (SELECT CodModelo FROM Modelo WHERE nome = 'Toyota Corolla')),
+
+-- Honda Civic
+('Civic LXS 1.8', 2010, (SELECT CodModelo FROM Modelo WHERE nome = 'Honda Civic')),
+('Civic SI 2.0 Turbo', 2023, (SELECT CodModelo FROM Modelo WHERE nome = 'Honda Civic'));

@@ -1,91 +1,202 @@
-/* Menu.css */
+/* Menu.css - Estilos Modernizados para o Menu/Dashboard */
+
 .menu-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: var(--background-color);
+  padding: calc(var(--spacing-unit) * 1.5) 0; /* Espaçamento vertical */
+}
+
+.menu-header {
+  margin-bottom: calc(var(--spacing-unit) * 2);
+  padding-bottom: var(--spacing-unit);
+  border-bottom: 1px solid var(--light-border);
+}
+
+@media (prefers-color-scheme: dark) {
+  .menu-header {
+    border-bottom-color: var(--dark-border);
   }
-  
-  .menu-header h2 {
-    font-size: 2.5em;
-    margin-bottom: 10px;
-  }
-  
-  .menu-header h3 {
-    font-size: 1.2em;
-    margin-top: 0;
-    color: var(--primary-text-color);
-  }
-  
-  .button-group {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 20px;
-  }
-  
-  button {
-    padding: 10px 20px;
-    font-size: 1em;
-    font-weight: 500;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  button:hover {
-    background-color: #646cff;
-    color: white;
-  }
-  
-  .logout-button {
-    background-color: #e60000;
-    color: white;
-  }
-  
-  .create-anuncio-button {
-    background-color: #28a745;
-    color: white;
-  }
-  
-  .chat-button {
-    background-color: #007bff;
-    color: white;
-  }
-  
-  .anuncios-list {
+}
+
+.menu-header h2 {
+  /* Tamanho já definido globalmente */
+  margin-bottom: calc(var(--spacing-unit) * 0.25);
+}
+
+.menu-header h3 {
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: var(--secondary-color);
+  margin-top: 0;
+}
+
+.button-group {
+  display: flex;
+  flex-wrap: wrap; /* Permite que botões quebrem linha em telas menores */
+  gap: calc(var(--spacing-unit) * 0.75);
+  margin-bottom: calc(var(--spacing-unit) * 1.5);
+  justify-content: center; /* Centraliza botões se quebrarem linha */
+}
+
+/* Estilos de botão já definidos globalmente em index.css */
+/* Apenas adicionamos cores específicas se necessário */
+
+.logout-button {
+  background-color: var(--danger-color);
+  border-color: var(--danger-color);
+}
+
+.create-anuncio-button {
+  background-color: var(--success-color);
+  border-color: var(--success-color);
+}
+
+.chat-button {
+  background-color: var(--info-color);
+  border-color: var(--info-color);
+}
+
+.delete-account-button { /* Adicionando estilo para botão de deletar conta */
+    background-color: var(--warning-color);
+    border-color: var(--warning-color);
+    color: var(--light-text); /* Texto escuro para contraste com amarelo */
+}
+
+@media (prefers-color-scheme: dark) {
+    .delete-account-button {
+        color: var(--dark-text); /* Texto claro no modo escuro */
+    }
+}
+
+/* --- Redesenho da Lista de Anúncios --- */
+
+.filter-section {
+    margin-bottom: calc(var(--spacing-unit) * 1.5);
+    padding: var(--spacing-unit);
+    background-color: var(--light-card-bg);
+    border: 1px solid var(--light-border);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+@media (prefers-color-scheme: dark) {
+    .filter-section {
+        background-color: var(--dark-card-bg);
+        border-color: var(--dark-border);
+        box-shadow: var(--box-shadow-dark);
+    }
+}
+
+.filter-section h4 {
+    margin-bottom: var(--spacing-unit);
+}
+
+.filter-controls {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Layout responsivo */
+    gap: var(--spacing-unit);
+}
+
+.anuncios-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Cards responsivos */
+    gap: calc(var(--spacing-unit) * 1.5);
     list-style-type: none;
     padding: 0;
-  }
-  
-  .anuncio-item {
+}
+
+.anuncio-card {
+    /* Usando a classe .card de index.css para fundo, borda e sombra */
+    border-radius: var(--border-radius);
+    overflow: hidden; /* Garante que a imagem não ultrapasse a borda arredondada */
     display: flex;
-    gap: 20px;
-    align-items: center;
-    margin-bottom: 20px;
-    padding: 10px;
-    border-radius: 8px;
-  }
-  
-  .anuncio-img {
-    width: 100px;
-    height: auto;
-    border-radius: 8px;
-  }
-  
-  .anuncio-info p {
-    color: var(--primary-text-color);
-  }
-  
-  .delete-button {
-    background-color: #dc3545;
-    color: white;
-    padding: 8px 16px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .delete-button:hover {
-    background-color: #c82333;
-  }
-  
+    flex-direction: column;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.anuncio-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 1rem 1.5rem rgba(0, 0, 0, 0.1);
+}
+
+@media (prefers-color-scheme: dark) {
+    .anuncio-card:hover {
+        box-shadow: 0 1rem 1.5rem rgba(0, 0, 0, 0.3);
+    }
+}
+
+.anuncio-img-container {
+    width: 100%;
+    height: 200px; /* Altura fixa para a imagem */
+    overflow: hidden;
+}
+
+.anuncio-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Cobre o container mantendo a proporção */
+    display: block;
+}
+
+.anuncio-info {
+    padding: var(--spacing-unit);
+    flex-grow: 1; /* Faz esta seção crescer para preencher o card */
+    display: flex;
+    flex-direction: column;
+}
+
+.anuncio-info h5 {
+    font-size: 1.2rem;
+    margin-bottom: calc(var(--spacing-unit) * 0.5);
+}
+
+.anuncio-info p {
+    margin-bottom: calc(var(--spacing-unit) * 0.25);
+    font-size: 0.95rem;
+    color: var(--secondary-color);
+}
+
+.anuncio-info .price {
+    font-weight: bold;
+    color: var(--success-color);
+    font-size: 1.1rem;
+    margin-top: auto; /* Empurra o preço e botões para baixo */
+    padding-top: calc(var(--spacing-unit) * 0.5);
+}
+
+.anuncio-actions {
+    display: flex;
+    justify-content: space-between; /* Separa os botões */
+    gap: calc(var(--spacing-unit) * 0.5);
+    margin-top: var(--spacing-unit);
+    padding-top: var(--spacing-unit);
+    border-top: 1px solid var(--light-border);
+}
+
+@media (prefers-color-scheme: dark) {
+    .anuncio-actions {
+        border-top-color: var(--dark-border);
+    }
+}
+
+.anuncio-actions button {
+    flex: 1; /* Faz os botões ocuparem espaço igual */
+    padding: calc(var(--spacing-unit) * 0.25) calc(var(--spacing-unit) * 0.5);
+    font-size: 0.9rem;
+}
+
+.edit-button {
+    background-color: var(--warning-color);
+    border-color: var(--warning-color);
+    color: var(--light-text);
+}
+
+.delete-button {
+    background-color: var(--danger-color);
+    border-color: var(--danger-color);
+}
+
+@media (prefers-color-scheme: dark) {
+    .edit-button {
+        color: var(--dark-text);
+    }
+}
+
