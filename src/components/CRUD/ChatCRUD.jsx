@@ -76,6 +76,8 @@ export const iniciarChat = async (codPessoa1, codPessoa2) => {
 
 // Função para enviar uma nova mensagem (cria chat se necessário)
 export const enviarMensagem = async (codRemetente, codDestinatario, texto) => {
+    console.log("Enviando mensagem:", codRemetente, codDestinatario, texto);
+
     try {
         if (!codRemetente || !codDestinatario || !texto) {
             throw new Error('Remetente, destinatário e texto são obrigatórios.');

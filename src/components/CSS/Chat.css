@@ -4,28 +4,26 @@
   display: flex;
   flex-direction: column;
   gap: calc(var(--spacing-unit) * 1.5);
-  /* Usando .container global para largura e padding */
 }
 
 .chat-layout {
     display: grid;
-    grid-template-columns: 1fr; /* Uma coluna por padrão */
+    grid-template-columns: 1fr;
     gap: calc(var(--spacing-unit) * 1.5);
 }
 
 @media (min-width: 768px) {
     .chat-layout {
-        grid-template-columns: 300px 1fr; /* Duas colunas em telas maiores: lista de chats | chat ativo */
+        grid-template-columns: 300px 1fr;
     }
 }
 
 .chat-list-section, .chat-window-section {
-    /* Usando .card de index.css para fundo, borda e sombra */
     padding: var(--spacing-unit);
     border-radius: var(--border-radius);
     display: flex;
     flex-direction: column;
-    min-height: 400px; /* Altura mínima para visualização */
+    min-height: 400px;
 }
 
 .chat-list-section h3, .chat-window-section h3 {
@@ -40,13 +38,12 @@
     }
 }
 
-/* --- Lista de Chats --- */
 .chat-list {
   list-style: none;
   padding: 0;
   margin: 0;
-  overflow-y: auto; /* Habilita scroll se a lista for longa */
-  flex-grow: 1; /* Ocupa espaço disponível */
+  overflow-y: auto;
+  flex-grow: 1;
 }
 
 .chat-item {
@@ -57,7 +54,7 @@
   border-bottom: 1px solid var(--light-border);
   cursor: pointer;
   transition: background-color 0.2s ease-in-out;
-  border-radius: calc(var(--border-radius) * 0.5); /* Borda levemente arredondada */
+  border-radius: calc(var(--border-radius) * 0.5);
 }
 
 .chat-item:last-child {
@@ -71,7 +68,7 @@
 }
 
 .chat-item:hover, .chat-item.active {
-  background-color: rgba(var(--primary-color-rgb, 0, 123, 255), 0.1); /* Fundo sutil ao passar/selecionar */
+  background-color: rgba(var(--primary-color-rgb, 0, 123, 255), 0.1);
 }
 
 .chat-item-info h4 {
@@ -84,11 +81,10 @@
   font-size: 0.85rem;
   color: var(--secondary-color);
   margin: 0;
-  /* Opcional: Limitar texto da última mensagem */
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  max-width: 200px; /* Ajustar conforme necessário */
+  max-width: 200px;
 }
 
 .delete-chat-button {
@@ -107,9 +103,8 @@
     opacity: 1;
 }
 
-/* --- Janela do Chat Ativo --- */
 .chat-window-section {
-    justify-content: space-between; /* Empurra input para baixo */
+    justify-content: space-between;
 }
 
 .message-list {
@@ -138,14 +133,14 @@
 .message-item.received {
   background-color: var(--light-border);
   align-self: flex-start;
-  border-bottom-left-radius: 0; /* Efeito "balão" */
+  border-bottom-left-radius: 0;
 }
 
 .message-item.sent {
   background-color: var(--primary-color);
   color: white;
   align-self: flex-end;
-  border-bottom-right-radius: 0; /* Efeito "balão" */
+  border-bottom-right-radius: 0;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -169,49 +164,18 @@
 
 .message-input-area textarea {
   flex-grow: 1;
-  margin-bottom: 0; /* Remover margem padrão do input */
-  resize: none; /* Desabilitar redimensionamento manual */
-  min-height: 40px; /* Altura mínima */
-  height: 40px; /* Altura inicial */
-  overflow-y: hidden; /* Esconder scrollbar inicial */
+  margin-bottom: 0;
+  resize: none;
+  min-height: 40px;
+  height: 40px;
+  overflow-y: hidden;
 }
 
 .message-input-area button {
-  flex-shrink: 0; /* Não encolher o botão */
-  margin: 0; /* Remover margem padrão do botão */
+  flex-shrink: 0;
+  margin: 0;
 }
 
-/* --- Seção para Iniciar Novo Chat --- */
-.new-chat-section {
-    /* Usando .card de index.css */
-    padding: var(--spacing-unit);
-    border-radius: var(--border-radius);
-    margin-top: calc(var(--spacing-unit) * 1.5); /* Espaço acima */
-}
-
-.new-chat-section h3 {
-    margin-bottom: var(--spacing-unit);
-}
-
-.new-chat-form {
-    display: flex;
-    flex-direction: column;
-    gap: var(--spacing-unit);
-}
-
-.new-chat-form select {
-    margin-bottom: 0; /* Remover margem padrão */
-}
-
-.new-chat-form textarea {
-    margin-bottom: 0;
-}
-
-.new-chat-form button {
-    margin-top: calc(var(--spacing-unit) * 0.5);
-}
-
-/* Placeholder para quando nenhum chat está selecionado */
 .no-chat-selected {
     display: flex;
     flex-direction: column;
@@ -229,3 +193,27 @@
     opacity: 0.5;
 }
 
+/* Novo estilo para feedback de criação de chat */
+.creating-chat-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--spacing-unit);
+    padding: var(--spacing-unit);
+    background-color: rgba(var(--info-color-rgb, 23, 162, 184), 0.1);
+    border-radius: var(--border-radius);
+    margin-bottom: var(--spacing-unit);
+}
+
+.creating-chat-indicator .spinner {
+    width: 1rem;
+    height: 1rem;
+    border: 2px solid var(--info-color);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}

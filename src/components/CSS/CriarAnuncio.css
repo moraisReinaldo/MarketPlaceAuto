@@ -1,6 +1,5 @@
 /* CriarAnuncio.css - Estilos Modernizados para o Formulário */
 
-/* Estilos específicos para o formulário de criação de anúncio */
 .card {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: box-shadow 0.3s ease;
@@ -10,20 +9,11 @@
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
 }
 
-/* Melhorias nos campos do formulário */
 .form-control:focus, .form-select:focus {
   border-color: var(--primary-color);
   box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
 }
 
-/* Estilização para o campo de fotos */
-textarea[name="fotos"] {
-  font-family: var(--font-family-monospace);
-  font-size: 0.9rem;
-  line-height: 1.5;
-}
-
-/* Botões com efeito de hover melhorado */
 .btn-primary {
   background-color: var(--primary-color);
   border-color: var(--primary-color);
@@ -48,7 +38,6 @@ textarea[name="fotos"] {
   transform: translateY(-2px);
 }
 
-/* Ajustes para modo escuro */
 @media (prefers-color-scheme: dark) {
   .card {
     background-color: var(--dark-card-bg);
@@ -70,19 +59,16 @@ textarea[name="fotos"] {
   }
 }
 
-/* Melhorias de espaçamento e layout */
 .form-label {
   font-weight: 500;
   margin-bottom: 0.25rem;
   color: var(--secondary-color);
 }
 
-/* Animação suave nos elementos do formulário */
 .form-control, .form-select, .btn {
   transition: all 0.3s ease;
 }
 
-/* Responsividade aprimorada */
 @media (max-width: 768px) {
   .card {
     padding: 1rem !important;
@@ -91,4 +77,48 @@ textarea[name="fotos"] {
   h2 {
     font-size: 1.5rem;
   }
+}
+
+/* Novos estilos para campos de foto */
+.foto-input-group {
+  margin-bottom: var(--spacing-unit);
+}
+
+.foto-input-row {
+  display: flex;
+  gap: calc(var(--spacing-unit) * 0.5);
+  margin-bottom: calc(var(--spacing-unit) * 0.5);
+}
+
+.foto-input-row input {
+  flex-grow: 1;
+}
+
+/* Estilo para spinner de loading */
+.submitting-spinner {
+  display: inline-block;
+  width: 1rem;
+  height: 1rem;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: spin 0.75s linear infinite;
+  margin-right: 0.5rem;
+  vertical-align: -0.125em;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Validação de URL inválida */
+.invalid-url {
+  border-color: var(--danger-color) !important;
+}
+
+.url-validation-error {
+  color: var(--danger-color);
+  font-size: 0.8rem;
+  margin-top: -0.5rem;
+  margin-bottom: 0.5rem;
 }

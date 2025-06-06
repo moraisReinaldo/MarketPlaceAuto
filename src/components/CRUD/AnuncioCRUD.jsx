@@ -1,5 +1,3 @@
-// Funções CRUD para Anúncios usando fetch e alinhadas ao novo backend
-
 const API_URL = 'http://localhost:3001'; // Centralizar a URL base da API
 
 // Função para buscar os anúncios com filtros opcionais
@@ -28,7 +26,6 @@ export const buscarAnuncios = async (filtros = {}) => {
     }
 };
 
-// Função para criar um novo anúncio
 export const criarAnuncio = async (dadosAnuncio) => {
     // dadosAnuncio deve ser um objeto { valor, descricao, codVersao, fotos: [link1, link2,...] }
     try {
@@ -135,3 +132,19 @@ export const deletarAnuncio = async (id) => {
     }
 };
 
+// Função para buscar um anúncio específico pelo ID
+export const buscarAnuncioPorId = async (idAnuncio) => {
+    try {
+        const url = `${API_URL}/anuncios/${idAnuncio}`;
+        const response = await fetch(url);
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || `Erro ${response.status} ao buscar o anúncio.`);
+        }
+        return await response.json(); // Retorna os detalhes do anúncio
+    } catch (error) {
+        console.error(`Erro ao buscar anúncio ${idAnuncio}:`, error);
+        alert(`Erro ao buscar detalhes do anúncio: ${error.message}`);
+        throw error; // Re-lança o erro para tratamento no componente
+    }
+};

@@ -1,7 +1,7 @@
 /* Menu.css - Estilos Modernizados para o Menu/Dashboard */
 
 .menu-container {
-  padding: calc(var(--spacing-unit) * 1.5) 0; /* Espaçamento vertical */
+  padding: calc(var(--spacing-unit) * 1.5) 0;
 }
 
 .menu-header {
@@ -17,7 +17,6 @@
 }
 
 .menu-header h2 {
-  /* Tamanho já definido globalmente */
   margin-bottom: calc(var(--spacing-unit) * 0.25);
 }
 
@@ -30,14 +29,11 @@
 
 .button-group {
   display: flex;
-  flex-wrap: wrap; /* Permite que botões quebrem linha em telas menores */
+  flex-wrap: wrap;
   gap: calc(var(--spacing-unit) * 0.75);
   margin-bottom: calc(var(--spacing-unit) * 1.5);
-  justify-content: center; /* Centraliza botões se quebrarem linha */
+  justify-content: center;
 }
-
-/* Estilos de botão já definidos globalmente em index.css */
-/* Apenas adicionamos cores específicas se necessário */
 
 .logout-button {
   background-color: var(--danger-color);
@@ -54,19 +50,17 @@
   border-color: var(--info-color);
 }
 
-.delete-account-button { /* Adicionando estilo para botão de deletar conta */
+.delete-account-button {
     background-color: var(--warning-color);
     border-color: var(--warning-color);
-    color: var(--light-text); /* Texto escuro para contraste com amarelo */
+    color: var(--light-text);
 }
 
 @media (prefers-color-scheme: dark) {
     .delete-account-button {
-        color: var(--dark-text); /* Texto claro no modo escuro */
+        color: var(--dark-text);
     }
 }
-
-/* --- Redesenho da Lista de Anúncios --- */
 
 .filter-section {
     margin-bottom: calc(var(--spacing-unit) * 1.5);
@@ -91,22 +85,21 @@
 
 .filter-controls {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); /* Layout responsivo */
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
     gap: var(--spacing-unit);
 }
 
 .anuncios-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); /* Cards responsivos */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: calc(var(--spacing-unit) * 1.5);
     list-style-type: none;
     padding: 0;
 }
 
 .anuncio-card {
-    /* Usando a classe .card de index.css para fundo, borda e sombra */
     border-radius: var(--border-radius);
-    overflow: hidden; /* Garante que a imagem não ultrapasse a borda arredondada */
+    overflow: hidden;
     display: flex;
     flex-direction: column;
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
@@ -125,20 +118,20 @@
 
 .anuncio-img-container {
     width: 100%;
-    height: 200px; /* Altura fixa para a imagem */
+    height: 200px;
     overflow: hidden;
 }
 
 .anuncio-img {
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Cobre o container mantendo a proporção */
+    object-fit: cover;
     display: block;
 }
 
 .anuncio-info {
     padding: var(--spacing-unit);
-    flex-grow: 1; /* Faz esta seção crescer para preencher o card */
+    flex-grow: 1;
     display: flex;
     flex-direction: column;
 }
@@ -158,13 +151,13 @@
     font-weight: bold;
     color: var(--success-color);
     font-size: 1.1rem;
-    margin-top: auto; /* Empurra o preço e botões para baixo */
+    margin-top: auto;
     padding-top: calc(var(--spacing-unit) * 0.5);
 }
 
 .anuncio-actions {
     display: flex;
-    justify-content: space-between; /* Separa os botões */
+    justify-content: space-between;
     gap: calc(var(--spacing-unit) * 0.5);
     margin-top: var(--spacing-unit);
     padding-top: var(--spacing-unit);
@@ -178,7 +171,7 @@
 }
 
 .anuncio-actions button {
-    flex: 1; /* Faz os botões ocuparem espaço igual */
+    flex: 1;
     padding: calc(var(--spacing-unit) * 0.25) calc(var(--spacing-unit) * 0.5);
     font-size: 0.9rem;
 }
@@ -197,6 +190,175 @@
 @media (prefers-color-scheme: dark) {
     .edit-button {
         color: var(--dark-text);
+    }
+}
+
+/* Estilos para paginação */
+.pagination-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: var(--spacing-unit);
+    margin-top: var(--spacing-unit);
+    padding: var(--spacing-unit) 0;
+}
+
+.pagination-controls button {
+    min-width: 100px;
+}
+
+.pagination-controls span {
+    font-size: 0.9rem;
+    color: var(--secondary-color);
+}
+
+/* Estilo para loading de anúncios */
+.anuncios-loading {
+    display: flex;
+    justify-content: center;
+    padding: var(--spacing-unit) 0;
+}
+
+.anuncios-loading .spinner {
+    width: 2rem;
+    height: 2rem;
+    border: 3px solid var(--primary-color);
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+
+/* Estilos adicionados de AnuncioCard.css para galeria de fotos */
+.anuncio-card .anuncio-img-container {
+    position: relative; /* Necessário para posicionar os botões e indicador */
+    width: 100%;
+    /* Defina uma altura fixa ou aspect-ratio para consistência */
+    height: 200px; /* Exemplo de altura fixa */
+    overflow: hidden; /* Garante que a imagem não ultrapasse o container */
+    background-color: #eee; /* Cor de fundo enquanto a imagem carrega */
+}
+
+.anuncio-card .anuncio-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Cobre o container, pode cortar partes da imagem */
+    display: block;
+}
+
+.anuncio-card .nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    z-index: 10;
+    border-radius: 4px;
+    opacity: 0.7;
+    transition: opacity 0.3s ease;
+}
+
+.anuncio-card .nav-button:hover {
+    opacity: 1;
+}
+
+.anuncio-card .prev-button {
+    left: 10px;
+}
+
+.anuncio-card .next-button {
+    right: 10px;
+}
+
+.anuncio-card .foto-indicator {
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 3px 8px;
+    border-radius: 10px;
+    font-size: 0.8rem;
+    z-index: 10;
+}
+
+/* Ajustes gerais do card (podem já existir em Menu.css ou index.css) */
+/* Verifique se as regras abaixo já existem no seu Menu.css original */
+/* Se sim, pode remover ou ajustar as duplicadas */
+.anuncio-card {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden; /* Garante que conteúdo interno respeite o border-radius */
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: box-shadow 0.3s ease;
+}
+
+.anuncio-card:hover {
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.anuncio-card .anuncio-info {
+    padding: 15px;
+    flex-grow: 1; /* Faz esta seção ocupar o espaço restante */
+    display: flex;
+    flex-direction: column;
+}
+
+.anuncio-card .anuncio-info h5 {
+    margin-top: 0;
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+}
+
+.anuncio-card .anuncio-info p {
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.anuncio-card .anuncio-info .anuncio-descricao {
+    flex-grow: 1; /* Ocupa espaço vertical disponível */
+    margin-bottom: 15px;
+    color: #333;
+    line-height: 1.4;
+}
+
+.anuncio-card .anuncio-info .price {
+    font-weight: bold;
+    color: #007bff; /* Cor de destaque para o preço */
+    font-size: 1.2rem;
+    margin-top: auto; /* Empurra o preço para baixo */
+}
+
+.anuncio-card .anuncio-actions {
+    padding: 10px 15px;
+    border-top: 1px solid #eee;
+    display: flex;
+    gap: 10px; /* Espaçamento entre botões */
+    justify-content: flex-end; /* Alinha botões à direita */
+}
+
+.anuncio-card .anuncio-actions .btn {
+    padding: 5px 10px;
+    font-size: 0.85rem;
+}
+
+/* Adicione responsividade se necessário */
+@media (max-width: 768px) {
+    .anuncio-card .anuncio-img-container {
+        height: 180px; /* Altura menor em telas pequenas */
     }
 }
 

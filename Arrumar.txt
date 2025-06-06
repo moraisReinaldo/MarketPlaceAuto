@@ -1,9 +1,3 @@
-- Deletar conta 
-- Editar anuncio 
-- Filtro Anuncio 
-- Arrumar primeira mensagem 
-- Excluir conversa 
-
-
-- Melhorar interface
-- Criar criptografia 
+Botões sumidos, editar e apagar para o usuario dono do anuncio 
+Arrumar o banco para se adequar a norma 
+iniciar conversa 

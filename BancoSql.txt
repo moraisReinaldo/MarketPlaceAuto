@@ -1,119 +1,110 @@
+-- Criação do Banco de Dados (se não existir)
+CREATE DATABASE IF NOT EXISTS MarketplaceAuto;
+USE MarketplaceAuto;
 
+-- Tabela Pessoa
 CREATE TABLE IF NOT EXISTS Pessoa (
-    CodPessoa INTEGER PRIMARY KEY AUTO_INCREMENT,
-    nome Varchar(60) NOT NULL,
-    usuario Varchar(60) NOT NULL UNIQUE,
-    senha Varchar(60) NOT NULL
+    CodPessoa INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(255) NOT NULL,
+    usuario VARCHAR(100) NOT NULL UNIQUE,
+    senha VARCHAR(255) NOT NULL -- Armazenar hash da senha
 );
 
+-- Tabela Modelo
 CREATE TABLE IF NOT EXISTS Modelo (
-    CodModelo INTEGER PRIMARY KEY AUTO_INCREMENT,
-    nome Varchar(60) NOT NULL UNIQUE
+    CodModelo INT AUTO_INCREMENT PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL UNIQUE
 );
 
+-- Tabela Versao
 CREATE TABLE IF NOT EXISTS Versao (
-    CodVersao INTEGER PRIMARY KEY AUTO_INCREMENT,
-    nome Varchar(60) NOT NULL,
-    ano INTEGER NOT NULL,
-    CodModelo INTEGER NOT NULL,
-    FOREIGN KEY (CodModelo) REFERENCES Modelo(CodModelo)
+    CodVersao INT AUTO_INCREMENT PRIMARY KEY,
+    CodModelo INT NOT NULL,
+    nome VARCHAR(100) NOT NULL,
+    FOREIGN KEY (CodModelo) REFERENCES Modelo(CodModelo) ON DELETE CASCADE
 );
 
+-- Tabela Anuncio (com ano e local)
 CREATE TABLE IF NOT EXISTS Anuncio (
-    CodAnuncio INTEGER PRIMARY KEY AUTO_INCREMENT,
-    valor Decimal(10,2) NOT NULL,
-    descricao Varchar(60),
-    CodPessoa INTEGER NOT NULL,
-    CodVersao INTEGER NOT NULL,
-    FOREIGN KEY (CodPessoa) REFERENCES Pessoa(CodPessoa),
-    FOREIGN KEY (CodVersao) REFERENCES Versao(CodVersao)
+    CodAnuncio INT AUTO_INCREMENT PRIMARY KEY,
+    CodPessoa INT NOT NULL,
+    CodVersao INT NOT NULL,
+    valor DECIMAL(10, 2) NOT NULL,
+    descricao TEXT,
+    ano INT, -- Ano específico do veículo anunciado
+    local VARCHAR(255), -- Localização do veículo
+    FOREIGN KEY (CodPessoa) REFERENCES Pessoa(CodPessoa) ON DELETE CASCADE,
+    FOREIGN KEY (CodVersao) REFERENCES Versao(CodVersao) ON DELETE CASCADE -- Ou ON DELETE RESTRICT se preferir
 );
 
+-- Tabela FotoAnuncio
 CREATE TABLE IF NOT EXISTS FotoAnuncio (
-    CodFoto INTEGER PRIMARY KEY AUTO_INCREMENT,
-    CodAnuncio INTEGER NOT NULL,
-    linkFoto Varchar(3000) NOT NULL,
-    FOREIGN KEY (CodAnuncio) REFERENCES Anuncio(CodAnuncio)
+    CodFoto INT AUTO_INCREMENT PRIMARY KEY,
+    CodAnuncio INT NOT NULL,
+    linkFoto VARCHAR(500) NOT NULL,
+    FOREIGN KEY (CodAnuncio) REFERENCES Anuncio(CodAnuncio) ON DELETE CASCADE
 );
 
+-- Tabela Chat
 CREATE TABLE IF NOT EXISTS Chat (
-    codChat INTEGER PRIMARY KEY AUTO_INCREMENT,
-    Codpessoa1 INTEGER NOT NULL,
-    Codpessoa2 INTEGER NOT NULL,
-    FOREIGN KEY (Codpessoa1) REFERENCES Pessoa(CodPessoa),
-    FOREIGN KEY (Codpessoa2) REFERENCES Pessoa(CodPessoa)
+    codChat INT AUTO_INCREMENT PRIMARY KEY,
+    Codpessoa1 INT NOT NULL,
+    Codpessoa2 INT NOT NULL,
+    FOREIGN KEY (Codpessoa1) REFERENCES Pessoa(CodPessoa) ON DELETE CASCADE,
+    FOREIGN KEY (Codpessoa2) REFERENCES Pessoa(CodPessoa) ON DELETE CASCADE,
+    -- Garante que não haja chats duplicados com ordem invertida
+    CONSTRAINT UQ_Chat UNIQUE (Codpessoa1, Codpessoa2)
 );
 
+-- Tabela Mensagem
 CREATE TABLE IF NOT EXISTS Mensagem (
-    codMensagem INTEGER PRIMARY KEY AUTO_INCREMENT,
-    codChat INTEGER NOT NULL,
-    codPessoa INTEGER NOT NULL,
-    texto Varchar(60) NOT NULL,
-    FOREIGN KEY (codChat) REFERENCES Chat(codChat),
-    FOREIGN KEY (codPessoa) REFERENCES Pessoa(CodPessoa)
+    codMensagem INT AUTO_INCREMENT PRIMARY KEY,
+    codChat INT NOT NULL,
+    codPessoa INT NOT NULL, -- Quem enviou a mensagem
+    texto TEXT NOT NULL,
+    -- timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, -- Opcional: adicionar timestamp
+    FOREIGN KEY (codChat) REFERENCES Chat(codChat) ON DELETE CASCADE,
+    FOREIGN KEY (codPessoa) REFERENCES Pessoa(CodPessoa) ON DELETE CASCADE
 );
 
 
-use MarketplaceAuto;
+-- Inserir Modelos
+INSERT INTO Modelo (nome) VALUES
+("Volkswagen"),
+("Chevrolet"),
+("Fiat"),
+("Ford"),
+("Toyota");
 
--- Modelos
-INSERT INTO Modelo (nome) VALUES 
-('Chevrolet Onix'),
-('Chevrolet Opala'),
-('Volkswagen Fusca'),
-('Volkswagen Gol'),
-('Fiat Uno'),
-('Fiat Palio'),
-('Ford Ka'),
-('Ford Fiesta'),
-('Renault Kwid'),
-('Toyota Corolla'),
-('Honda Civic'),
+-- Inserir Versões (associadas aos modelos pelo CodModelo)
+-- Assumindo que os CodModelo gerados foram 1=VW, 2=Chevrolet, 3=Fiat, 4=Ford, 5=Toyota
 
--- Versões
-INSERT INTO Versao (nome, ano, CodModelo) VALUES
--- Chevrolet Onix
-('Joy 1.0', 2020, (SELECT CodModelo FROM Modelo WHERE nome = 'Chevrolet Onix')),
-('LT 1.4', 2018, (SELECT CodModelo FROM Modelo WHERE nome = 'Chevrolet Onix')),
-('LTZ Turbo', 2021, (SELECT CodModelo FROM Modelo WHERE nome = 'Chevrolet Onix')),
+-- Versões Volkswagen (CodModelo = 1)
+INSERT INTO Versao (CodModelo, nome) VALUES
+(1, "Gol 1.0"),
+(1, "Polo Highline"),
+(1, "T-Cross Comfortline");
 
--- Chevrolet Opala
-('Diplomata 4.1', 1992, (SELECT CodModelo FROM Modelo WHERE nome = 'Chevrolet Opala')),
-('Comodoro 2.5', 1987, (SELECT CodModelo FROM Modelo WHERE nome = 'Chevrolet Opala')),
+-- Versões Chevrolet (CodModelo = 2)
+INSERT INTO Versao (CodModelo, nome) VALUES
+(2, "Onix LTZ"),
+(2, "Tracker Premier"),
+(2, "S10 LTZ Diesel");
 
--- VW Gol
-('Gol 1000 Mi', 2005, (SELECT CodModelo FROM Modelo WHERE nome = 'Volkswagen Gol')),
-('Gol GTS 1.8', 1994, (SELECT CodModelo FROM Modelo WHERE nome = 'Volkswagen Gol')),
-('Gol GTI Turbo', 2002, (SELECT CodModelo FROM Modelo WHERE nome = 'Volkswagen Gol')),
+-- Versões Fiat (CodModelo = 3)
+INSERT INTO Versao (CodModelo, nome) VALUES
+(3, "Mobi Like"),
+(3, "Strada Freedom"),
+(3, "Toro Volcano Diesel");
 
--- VW Fusca
-('Fusca 1300L', 1978, (SELECT CodModelo FROM Modelo WHERE nome = 'Volkswagen Fusca')),
-('Fusca Itamar', 1996, (SELECT CodModelo FROM Modelo WHERE nome = 'Volkswagen Fusca')),
+-- Versões Ford (CodModelo = 4)
+INSERT INTO Versao (CodModelo, nome) VALUES
+(4, "Ranger Limited"),
+(4, "Territory Titanium");
 
--- Fiat Uno
-('Uno Mille Economy', 2011, (SELECT CodModelo FROM Modelo WHERE nome = 'Fiat Uno')),
-('Uno Turbo i.e.', 1996, (SELECT CodModelo FROM Modelo WHERE nome = 'Fiat Uno')),
+-- Versões Toyota (CodModelo = 5)
+INSERT INTO Versao (CodModelo, nome) VALUES
+(5, "Corolla XEi"),
+(5, "Hilux SRX Diesel"),
+(5, "Yaris Sedan XLS");
 
--- Fiat Palio
-('Palio ELX 1.0', 2008, (SELECT CodModelo FROM Modelo WHERE nome = 'Fiat Palio')),
-('Palio Sporting 1.6', 2014, (SELECT CodModelo FROM Modelo WHERE nome = 'Fiat Palio')),
-
--- Ford Ka
-('Ka 1.0 SE', 2019, (SELECT CodModelo FROM Modelo WHERE nome = 'Ford Ka')),
-('Ka Street 1.0', 2002, (SELECT CodModelo FROM Modelo WHERE nome = 'Ford Ka')),
-
--- Ford Fiesta
-('Fiesta Hatch 1.6', 2011, (SELECT CodModelo FROM Modelo WHERE nome = 'Ford Fiesta')),
-('Fiesta Sedan 1.0', 2006, (SELECT CodModelo FROM Modelo WHERE nome = 'Ford Fiesta')),
-
--- Renault Kwid
-('Kwid Zen 1.0', 2022, (SELECT CodModelo FROM Modelo WHERE nome = 'Renault Kwid')),
-('Kwid Intense 1.0', 2020, (SELECT CodModelo FROM Modelo WHERE nome = 'Renault Kwid')),
-
--- Toyota Corolla
-('Corolla XEi 2.0', 2021, (SELECT CodModelo FROM Modelo WHERE nome = 'Toyota Corolla')),
-('Corolla GLi 1.8', 2015, (SELECT CodModelo FROM Modelo WHERE nome = 'Toyota Corolla')),
-
--- Honda Civic
-('Civic LXS 1.8', 2010, (SELECT CodModelo FROM Modelo WHERE nome = 'Honda Civic')),
-('Civic SI 2.0 Turbo', 2023, (SELECT CodModelo FROM Modelo WHERE nome = 'Honda Civic'));
