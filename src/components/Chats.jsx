@@ -123,20 +123,30 @@ const Chats = () => {
             alert('Selecione um chat e digite uma mensagem.');
             return;
         }
-        const codDestinatario = chatSelecionado.Codpessoa1 === loggedUser.id
+        
+        // Garantir que temos o ID do usuário logado
+        const userId = loggedUser.id || loggedUser.CodPessoa;
+        
+        if (!userId) {
+            console.error('ID do usuário logado não encontrado');
+            alert('Erro ao identificar usuário. Por favor, faça login novamente.');
+            return;
+        }
+        
+        const codDestinatario = chatSelecionado.Codpessoa1 === userId
                                 ? chatSelecionado.Codpessoa2
                                 : chatSelecionado.Codpessoa1;
         try {
-            const mensagemEnviada = await enviarMensagem(loggedUser.id, codDestinatario, novaMensagem);
+            const mensagemEnviada = await enviarMensagem(userId, codDestinatario, novaMensagem);
             
             setMensagens(prev => [...prev, { 
                 ...mensagemEnviada, 
-                codPessoa: loggedUser.id,
+                codPessoa: userId,
                 nomePessoa: loggedUser.nome
             }]);
             setNovaMensagem('');
 
-            const chatsAtualizados = await buscarChats(loggedUser.id);
+            const chatsAtualizados = await buscarChats(userId);
             setChats(chatsAtualizados);
 
         } catch (err) {
@@ -222,7 +232,7 @@ const Chats = () => {
                                     mensagens.map((msg) => (
                                         <div
                                             key={msg.codMensagem}
-                                            className={`message-item ${msg.codPessoa === loggedUser?.id ? 'sent' : 'received'}`}
+                                            className={`message-item ${msg.codPessoa === (loggedUser?.id || loggedUser?.CodPessoa) ? 'sent' : 'received'}`}
                                         >
                                             <p>{msg.texto}</p>
                                         </div>

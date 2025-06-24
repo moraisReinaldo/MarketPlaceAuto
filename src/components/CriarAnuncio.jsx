@@ -19,6 +19,8 @@ const CriarAnuncio = () => {
   const [modelos, setModelos] = useState([]);
   const [versoes, setVersoes] = useState([]);
   const [selectedModelo, setSelectedModelo] = useState('');
+  const [modeloInput, setModeloInput] = useState('');
+  const [versaoInput, setVersaoInput] = useState('');
   const [form, setForm] = useState({
     valor: '',
     descricao: '',
@@ -67,6 +69,7 @@ const CriarAnuncio = () => {
           setLoadingVersoes(true);
           setVersoes([]);
           setForm(prev => ({ ...prev, codVersao: '' }));
+          setVersaoInput('');
           const response = await fetch(`${API_URL}/versoes/${selectedModelo}`);
           if (!response.ok) throw new Error('Erro ao buscar versões');
           const data = await response.json();
@@ -82,6 +85,7 @@ const CriarAnuncio = () => {
     } else {
       setVersoes([]);
       setForm(prev => ({ ...prev, codVersao: '' }));
+      setVersaoInput('');
     }
   }, [selectedModelo]);
 
@@ -93,8 +97,30 @@ const CriarAnuncio = () => {
     }));
   };
 
-  const handleModeloChange = (e) => {
-    setSelectedModelo(e.target.value);
+  const handleModeloInputChange = (e) => {
+    const value = e.target.value;
+    setModeloInput(value);
+    
+    // Encontrar o modelo correspondente ao texto digitado
+    const modelo = modelos.find(m => m.nome === value);
+    if (modelo) {
+      setSelectedModelo(modelo.CodModelo);
+    } else {
+      setSelectedModelo('');
+    }
+  };
+
+  const handleVersaoInputChange = (e) => {
+    const value = e.target.value;
+    setVersaoInput(value);
+    
+    // Encontrar a versão correspondente ao texto digitado
+    const versao = versoes.find(v => v.nome === value);
+    if (versao) {
+      setForm(prev => ({ ...prev, codVersao: versao.CodVersao }));
+    } else {
+      setForm(prev => ({ ...prev, codVersao: '' }));
+    }
   };
 
   const handleFotoChange = (index, value) => {
@@ -123,7 +149,20 @@ const CriarAnuncio = () => {
 
     const fotosValidas = fotos.map(link => link.trim()).filter(link => link !== '');
 
-    if (!valor || !descricao || !codVersao || !ano || !local || fotosValidas.length === 0 || !codPessoa) {
+    // Verificar se o modelo e versão foram selecionados corretamente
+    if (!selectedModelo) {
+      setError('Por favor, selecione um modelo válido da lista.');
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!codVersao) {
+      setError('Por favor, selecione uma versão válida da lista.');
+      setIsSubmitting(false);
+      return;
+    }
+
+    if (!valor || !descricao || !ano || !local || fotosValidas.length === 0 || !codPessoa) {
       setError('Todos os campos são obrigatórios, incluindo pelo menos uma foto e estar logado.');
       setIsSubmitting(false);
       return;
@@ -131,12 +170,6 @@ const CriarAnuncio = () => {
 
     if (fotosValidas.some(url => !isValidUrl(url))) {
       setError('Por favor, insira URLs válidas para as fotos');
-      setIsSubmitting(false);
-      return;
-    }
-
-    if (parseInt(ano) < 1900 || parseInt(ano) > new Date().getFullYear() + 1) {
-      setError('Por favor, insira um ano válido');
       setIsSubmitting(false);
       return;
     }
@@ -150,6 +183,8 @@ const CriarAnuncio = () => {
       local,
       fotos: fotosValidas,
     };
+
+    console.log("Enviando dados do anúncio:", anuncioData);
 
     try {
       await criarAnuncio(anuncioData);
@@ -177,56 +212,51 @@ const CriarAnuncio = () => {
         <form onSubmit={handleSubmit} className="row g-3">
           <div className="col-md-6">
             <label htmlFor="modelo" className="form-label">Modelo:</label>
-            <select
+            <input
               id="modelo"
-              name="modelo"
-              value={selectedModelo}
-              onChange={handleModeloChange}
+              list="modeloOptions"
+              className="form-control"
+              placeholder="Digite ou selecione o modelo"
+              value={modeloInput}
+              onChange={handleModeloInputChange}
               required
-              className="form-select"
-              disabled={loadingModelos}
-            >
-              <option value="">{loadingModelos ? 'Carregando...' : 'Selecione o Modelo'}</option>
+            />
+            <datalist id="modeloOptions">
               {modelos.map((modelo) => (
-                <option key={modelo.CodModelo} value={modelo.CodModelo}>
-                  {modelo.nome}
-                </option>
+                <option key={modelo.CodModelo} value={modelo.nome} />
               ))}
-            </select>
+            </datalist>
           </div>
 
           <div className="col-md-6">
-            <label htmlFor="codVersao" className="form-label">Versão:</label>
-            <select
-              id="codVersao"
-              name="codVersao"
-              value={form.codVersao}
-              onChange={handleInputChange}
-              required
-              className="form-select"
+            <label htmlFor="versao" className="form-label">Versão:</label>
+            <input
+              id="versao"
+              list="versaoOptions"
+              className="form-control"
+              placeholder="Digite ou selecione a versão"
+              value={versaoInput}
+              onChange={handleVersaoInputChange}
               disabled={!selectedModelo || loadingVersoes}
-            >
-              <option value="">{loadingVersoes ? 'Carregando...' : (selectedModelo ? 'Selecione a Versão' : 'Selecione um modelo')}</option>
+              required
+            />
+            <datalist id="versaoOptions">
               {versoes.map((versao) => (
-                <option key={versao.CodVersao} value={versao.CodVersao}>
-                  {versao.nome} ({versao.ano})
-                </option>
+                <option key={versao.CodVersao} value={versao.nome} />
               ))}
-            </select>
+            </datalist>
           </div>
 
           <div className="col-md-6">
             <label htmlFor="ano" className="form-label">Ano:</label>
             <input
               id="ano"
-              type="number"
+              type="text"
               name="ano"
               placeholder="Ex: 2020"
               value={form.ano}
               onChange={handleInputChange}
               required
-              min="1900"
-              max={new Date().getFullYear() + 1}
               className="form-control"
             />
           </div>
@@ -247,21 +277,16 @@ const CriarAnuncio = () => {
 
           <div className="col-12">
             <label htmlFor="valor" className="form-label">Valor (R$):</label>
-            <div className="input-group">
-              <span className="input-group-text">R$</span>
-              <input
-                id="valor"
-                type="number"
-                name="valor"
-                placeholder="Ex: 50000.00"
-                value={form.valor}
-                onChange={handleInputChange}
-                required
-                step="0.01"
-                min="0"
-                className="form-control"
-              />
-            </div>
+            <input
+              id="valor"
+              type="text"
+              name="valor"
+              placeholder="Ex: 50000.00"
+              value={form.valor}
+              onChange={handleInputChange}
+              required
+              className="form-control"
+            />
           </div>
 
           <div className="col-12">
@@ -315,7 +340,7 @@ const CriarAnuncio = () => {
             <Link to="/menu">
               <button type="button" className="btn btn-secondary">Cancelar</button>
             </Link>
-            <button type="submit" className="btn btn-primary" disabled={isSubmitting || loadingModelos || loadingVersoes}>
+            <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
               {isSubmitting ? (
                 <>
                   <span className="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>

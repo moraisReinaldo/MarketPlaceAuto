@@ -74,29 +74,28 @@ export const iniciarChat = async (codPessoa1, codPessoa2) => {
     }
 };
 
-// Função para enviar uma nova mensagem (cria chat se necessário)
-export const enviarMensagem = async (codRemetente, codDestinatario, texto) => {
-    console.log("Enviando mensagem:", codRemetente, codDestinatario, texto);
+// Função para enviar uma nova mensagem
+// Versão corrigida: usa o chatId diretamente quando disponível
+export const enviarMensagem = async (codRemetente, codDestinatario, texto, codChat = null) => {
+    console.log("Enviando mensagem:", codRemetente, codDestinatario, texto, "Chat ID:", codChat);
 
     try {
         if (!codRemetente || !codDestinatario || !texto) {
             throw new Error('Remetente, destinatário e texto são obrigatórios.');
         }
 
-        // Primeiro, garante que o chat existe (ou cria um novo)
-        const chatInfo = await iniciarChat(codRemetente, codDestinatario);
-        if (!chatInfo || !chatInfo.codChat) {
-            throw new Error("Não foi possível obter ou criar o chat para enviar a mensagem.");
-        }
-
-        // Agora envia a mensagem para o chat existente/criado
+        // Enviar a mensagem diretamente para o backend
+        // O backend já verifica se o chat existe e o cria se necessário
         const response = await fetch(`${API_URL}/mensagens`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
             },
-            // O backend deve associar a mensagem ao chat correto usando remetente/destinatário
-            body: JSON.stringify({ codRemetente, codDestinatario, texto }), 
+            body: JSON.stringify({ 
+                codRemetente, 
+                codDestinatario, 
+                texto 
+            }), 
         });
 
         if (!response.ok) {
@@ -141,4 +140,3 @@ export const deletarChat = async (chatId) => {
         throw error;
     }
 };
-

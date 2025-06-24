@@ -29,7 +29,7 @@ CREATE TABLE IF NOT EXISTS Anuncio (
     CodAnuncio INT AUTO_INCREMENT PRIMARY KEY,
     CodPessoa INT NOT NULL,
     CodVersao INT NOT NULL,
-    valor DECIMAL(10, 2) NOT NULL,
+    valor DECIMAL(50, 2) NOT NULL,
     descricao TEXT,
     ano INT, -- Ano específico do veículo anunciado
     local VARCHAR(255), -- Localização do veículo
@@ -65,6 +65,19 @@ CREATE TABLE IF NOT EXISTS Mensagem (
     -- timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, -- Opcional: adicionar timestamp
     FOREIGN KEY (codChat) REFERENCES Chat(codChat) ON DELETE CASCADE,
     FOREIGN KEY (codPessoa) REFERENCES Pessoa(CodPessoa) ON DELETE CASCADE
+);
+
+-- Tabela Venda
+CREATE TABLE IF NOT EXISTS Venda (
+    CodVenda INT AUTO_INCREMENT PRIMARY KEY,
+    data DATETIME NOT NULL,
+    CodComprador INT NOT NULL,
+    CodVendedor INT NOT NULL,
+    CodAnuncio INT NOT NULL,
+    FOREIGN KEY (CodComprador) REFERENCES Pessoa(CodPessoa) ON DELETE CASCADE,
+    FOREIGN KEY (CodVendedor) REFERENCES Pessoa(CodPessoa) ON DELETE CASCADE,
+    FOREIGN KEY (CodAnuncio) REFERENCES Anuncio(CodAnuncio) ON DELETE CASCADE,
+    CONSTRAINT UQ_Venda_Anuncio UNIQUE (CodAnuncio)
 );
 
 
@@ -107,4 +120,200 @@ INSERT INTO Versao (CodModelo, nome) VALUES
 (5, "Corolla XEi"),
 (5, "Hilux SRX Diesel"),
 (5, "Yaris Sedan XLS");
+
+-- View 1: Detalhes das vendas com nome de comprador, vendedor e anúncio
+CREATE OR REPLACE VIEW vw_detalhes_vendas AS
+SELECT 
+    v.CodVenda,
+    v.data,
+    c.nome AS Comprador,
+    vdd.nome AS Vendedor,
+    a.valor,
+    a.descricao
+FROM Venda v
+JOIN Pessoa c ON v.CodComprador = c.CodPessoa
+JOIN Pessoa vdd ON v.CodVendedor = vdd.CodPessoa
+JOIN Anuncio a ON v.CodAnuncio = a.CodAnuncio;
+
+-- View 2: Anúncios com informações de versão, modelo e anunciante
+CREATE OR REPLACE VIEW vw_anuncios_completos AS
+SELECT 
+    a.CodAnuncio,
+    p.nome AS Anunciante,
+    m.nome AS Modelo,
+    v.nome AS Versao,
+    a.valor,
+    a.ano,
+    a.local
+FROM Anuncio a
+JOIN Pessoa p ON a.CodPessoa = p.CodPessoa
+JOIN Versao v ON a.CodVersao = v.CodVersao
+JOIN Modelo m ON v.CodModelo = m.CodModelo;
+
+-- View 3: Chats com nomes dos participantes
+CREATE OR REPLACE VIEW vw_chats AS
+SELECT 
+    c.codChat,
+    p1.nome AS Pessoa1,
+    p2.nome AS Pessoa2
+FROM Chat c
+JOIN Pessoa p1 ON c.Codpessoa1 = p1.CodPessoa
+JOIN Pessoa p2 ON c.Codpessoa2 = p2.CodPessoa;
+
+-- View 4: Últimas mensagens por chat
+CREATE OR REPLACE VIEW vw_ultimas_mensagens AS
+SELECT 
+    m.codChat,
+    MAX(m.codMensagem) AS UltimaMensagemID,
+    MAX(m.texto) AS Texto
+FROM Mensagem m
+GROUP BY m.codChat;
+
+-- Trigger: Ao inserir um anúncio marcado como vendido, registra na tabela Venda
+DELIMITER //
+CREATE TRIGGER trg_venda_insert
+AFTER INSERT ON Anuncio
+FOR EACH ROW
+BEGIN
+    -- Exemplo de trigger automática. Aqui usamos um critério fictício:
+    -- Se descrição conter 'vendido', registramos como venda (simulação)
+    IF NEW.descricao LIKE '%vendido%' THEN
+        INSERT INTO Venda (data, CodComprador, CodVendedor, CodAnuncio)
+        VALUES (NOW(), NEW.CodPessoa, NEW.CodPessoa, NEW.CodAnuncio);
+    END IF;
+END;
+//
+DELIMITER ;
+
+-- Trigger: Ao deletar um anúncio vendido, remove venda (simulando rollback de venda)
+DELIMITER //
+CREATE TRIGGER trg_venda_delete
+AFTER DELETE ON Anuncio
+FOR EACH ROW
+BEGIN
+    DELETE FROM Venda WHERE CodAnuncio = OLD.CodAnuncio;
+END;
+//
+DELIMITER ;
+
+-- Trigger: Atualização em anúncio marcando como vendido
+DELIMITER //
+CREATE TRIGGER trg_venda_update
+AFTER UPDATE ON Anuncio
+FOR EACH ROW
+BEGIN
+    IF NEW.descricao LIKE '%vendido%' AND OLD.descricao NOT LIKE '%vendido%' THEN
+        INSERT INTO Venda (data, CodComprador, CodVendedor, CodAnuncio)
+        VALUES (NOW(), NEW.CodPessoa, NEW.CodPessoa, NEW.CodAnuncio);
+    END IF;
+END;
+//
+DELIMITER ;
+
+-- Trigger: Log de venda (auditoria básica)
+CREATE TABLE IF NOT EXISTS LogVenda (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    CodVenda INT,
+    acao VARCHAR(50),
+    dataLog DATETIME
+);
+
+DELIMITER //
+CREATE TRIGGER trg_log_insert_venda
+AFTER INSERT ON Venda
+FOR EACH ROW
+BEGIN
+    INSERT INTO LogVenda (CodVenda, acao, dataLog)
+    VALUES (NEW.CodVenda, 'INSERIDO', NOW());
+END;
+//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER trg_log_update_venda
+AFTER UPDATE ON Venda
+FOR EACH ROW
+BEGIN
+    INSERT INTO LogVenda (CodVenda, acao, dataLog)
+    VALUES (NEW.CodVenda, 'ATUALIZADO', NOW());
+END;
+//
+DELIMITER ;
+
+DELIMITER //
+CREATE TRIGGER trg_log_delete_venda
+AFTER DELETE ON Venda
+FOR EACH ROW
+BEGIN
+    INSERT INTO LogVenda (CodVenda, acao, dataLog)
+    VALUES (OLD.CodVenda, 'REMOVIDO', NOW());
+END;
+//
+DELIMITER ;
+
+-- 1. Registrar venda manualmente
+DELIMITER //
+CREATE PROCEDURE sp_registrar_venda(
+    IN p_CodComprador INT,
+    IN p_CodVendedor INT,
+    IN p_CodAnuncio INT
+)
+BEGIN
+    INSERT INTO Venda (data, CodComprador, CodVendedor, CodAnuncio)
+    VALUES (NOW(), p_CodComprador, p_CodVendedor, p_CodAnuncio);
+END;
+//
+DELIMITER ;
+
+-- 2. Buscar vendas por pessoa
+DELIMITER //
+CREATE PROCEDURE sp_vendas_por_pessoa(IN p_id INT)
+BEGIN
+    SELECT * FROM Venda WHERE CodComprador = p_id OR CodVendedor = p_id;
+END;
+//
+DELIMITER ;
+
+-- 3. Atualizar valor do anúncio
+DELIMITER //
+CREATE PROCEDURE sp_atualizar_valor_anuncio(IN p_CodAnuncio INT, IN p_valor DECIMAL(10,2))
+BEGIN
+    UPDATE Anuncio SET valor = p_valor WHERE CodAnuncio = p_CodAnuncio;
+END;
+//
+DELIMITER ;
+
+-- 4. Deletar anúncio e registrar venda cancelada
+DELIMITER //
+CREATE PROCEDURE sp_cancelar_venda(IN p_CodAnuncio INT)
+BEGIN
+    DELETE FROM Venda WHERE CodAnuncio = p_CodAnuncio;
+    DELETE FROM Anuncio WHERE CodAnuncio = p_CodAnuncio;
+END;
+//
+DELIMITER ;
+
+-- 1. Verifica se o anúncio já foi vendido
+DELIMITER //
+CREATE FUNCTION fn_anuncio_vendido(p_CodAnuncio INT) RETURNS BOOLEAN
+DETERMINISTIC
+BEGIN
+    DECLARE resultado BOOLEAN;
+    SET resultado = EXISTS (SELECT 1 FROM Venda WHERE CodAnuncio = p_CodAnuncio);
+    RETURN resultado;
+END;
+//
+DELIMITER ;
+
+-- 2. Retorna número total de anúncios de um usuário
+DELIMITER //
+CREATE FUNCTION fn_total_anuncios_usuario(p_CodPessoa INT) RETURNS INT
+DETERMINISTIC
+BEGIN
+    DECLARE total INT;
+    SELECT COUNT(*) INTO total FROM Anuncio WHERE CodPessoa = p_CodPessoa;
+    RETURN total;
+END;
+//
+DELIMITER ;
 

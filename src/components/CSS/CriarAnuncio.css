@@ -1,15 +1,41 @@
-/* CriarAnuncio.css - Estilos Modernizados para o Formulário */
+/* CriarAnuncio.css - Estilos Modernizados para o Formulário de Anúncio */
 
 .card {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: box-shadow 0.3s ease;
+  background-color: var(--light-card-bg);
+  border: 1px solid var(--light-border);
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  transition: box-shadow 0.3s ease, transform 0.2s ease;
+  padding: var(--spacing-unit);
 }
 
 .card:hover {
   box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  transform: translateY(-4px);
 }
 
-.form-control:focus, .form-select:focus {
+@media (prefers-color-scheme: dark) {
+  .card {
+    background-color: var(--dark-card-bg);
+    border-color: var(--dark-border);
+    box-shadow: var(--box-shadow-dark);
+  }
+}
+
+.form-label {
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+  color: var(--secondary-color);
+}
+
+.form-control,
+.form-select,
+.btn {
+  transition: all 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
   border-color: var(--primary-color);
   box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
 }
@@ -17,6 +43,7 @@
 .btn-primary {
   background-color: var(--primary-color);
   border-color: var(--primary-color);
+  color: white;
   transition: all 0.2s ease;
 }
 
@@ -29,6 +56,7 @@
 .btn-secondary {
   background-color: var(--secondary-color);
   border-color: var(--secondary-color);
+  color: white;
   transition: all 0.2s ease;
 }
 
@@ -39,47 +67,34 @@
 }
 
 @media (prefers-color-scheme: dark) {
-  .card {
-    background-color: var(--dark-card-bg);
-    border-color: var(--dark-border);
-  }
-  
-  .form-control, .form-select {
+  .form-control,
+  .form-select {
     background-color: rgba(255, 255, 255, 0.05);
     border-color: var(--dark-border);
     color: var(--dark-text);
   }
-  
-  .form-control:focus, .form-select:focus {
+
+  .form-control:focus,
+  .form-select:focus {
     background-color: rgba(255, 255, 255, 0.1);
   }
-  
+
   .form-text {
     color: rgba(255, 255, 255, 0.6);
   }
-}
-
-.form-label {
-  font-weight: 500;
-  margin-bottom: 0.25rem;
-  color: var(--secondary-color);
-}
-
-.form-control, .form-select, .btn {
-  transition: all 0.3s ease;
 }
 
 @media (max-width: 768px) {
   .card {
     padding: 1rem !important;
   }
-  
+
   h2 {
     font-size: 1.5rem;
   }
 }
 
-/* Novos estilos para campos de foto */
+/* Campo de fotos */
 .foto-input-group {
   margin-bottom: var(--spacing-unit);
 }
@@ -94,7 +109,7 @@
   flex-grow: 1;
 }
 
-/* Estilo para spinner de loading */
+/* Spinner */
 .submitting-spinner {
   display: inline-block;
   width: 1rem;
@@ -108,10 +123,12 @@
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  to {
+    transform: rotate(360deg);
+  }
 }
 
-/* Validação de URL inválida */
+/* Validação */
 .invalid-url {
   border-color: var(--danger-color) !important;
 }

@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { buscarAnuncioPorId, editarAnuncio } from './CRUD/AnuncioCRUD.jsx';
@@ -21,6 +20,7 @@ const EditarAnuncio = () => {
   const navigate = useNavigate();
   const [anuncio, setAnuncio] = useState(null); // Armazena dados originais do anúncio
   const [versoesDisponiveis, setVersoesDisponiveis] = useState([]);
+  const [versaoInput, setVersaoInput] = useState('');
   const [form, setForm] = useState({
     valor: '',
     descricao: '',
@@ -55,7 +55,17 @@ const EditarAnuncio = () => {
           local: data.local || '', // Preencher local
           codVersao: data.CodVersao || '', // Preencher codVersao
         });
-        setFotos(data.fotos && data.fotos.length > 0 ? data.fotos.map(f => f.linkFoto) : ['']);
+        
+        // Definir o texto da versão selecionada
+        setVersaoInput(data.nomeVersao || '');
+        
+        // Preparar as fotos
+        if (data.fotos && data.fotos.length > 0) {
+          setFotos(data.fotos.map(f => f.linkFoto));
+        } else {
+          setFotos(['']);
+        }
+        
         setLoading(false);
 
         // 2. Buscar versões disponíveis para o modelo do anúncio
@@ -87,6 +97,20 @@ const EditarAnuncio = () => {
       ...prevForm,
       [name]: value,
     }));
+  };
+
+  const handleVersaoInputChange = (e) => {
+    const value = e.target.value;
+    setVersaoInput(value);
+    
+    // Encontrar a versão correspondente ao texto digitado
+    const versao = versoesDisponiveis.find(v => v.nome === value);
+    if (versao) {
+      setForm(prev => ({ ...prev, codVersao: versao.CodVersao }));
+    } else {
+      // Se não encontrar, manter o valor atual
+      // Isso permite que o usuário digite parcialmente e depois selecione
+    }
   };
 
   const handleFotoChange = (index, value) => {
@@ -145,6 +169,8 @@ const EditarAnuncio = () => {
       fotos: fotosValidas,
     };
 
+    console.log("Enviando dados para edição:", dadosUpdate);
+
     try {
       await editarAnuncio(idAnuncio, dadosUpdate);
       alert('Anúncio atualizado com sucesso!');
@@ -195,41 +221,37 @@ const EditarAnuncio = () => {
         <form onSubmit={handleSubmit} className="row g-3">
           {/* Campos Editáveis */}
           
-          {/* Versão (Dropdown) */}
+          {/* Versão (Input com datalist) */}
           <div className="col-md-6">
-            <label htmlFor="codVersao" className="form-label">Versão:</label>
-            <select
-              id="codVersao"
-              name="codVersao"
-              value={form.codVersao}
-              onChange={handleInputChange}
-              required
-              className="form-select"
+            <label htmlFor="versao" className="form-label">Versão:</label>
+            <input
+              id="versao"
+              list="versaoOptions"
+              className="form-control"
+              placeholder="Digite ou selecione a versão"
+              value={versaoInput}
+              onChange={handleVersaoInputChange}
               disabled={loadingVersoes}
-            >
-              <option value="">{loadingVersoes ? 'Carregando...' : 'Selecione a Versão'}</option>
+              required
+            />
+            <datalist id="versaoOptions">
               {versoesDisponiveis.map((versao) => (
-                <option key={versao.CodVersao} value={versao.CodVersao}>
-                  {/* Exibe nome e ano de referência da versão */} 
-                  {versao.nome} {versao.ano ? `(${versao.ano})` : ''}
-                </option>
+                <option key={versao.CodVersao} value={versao.nome} />
               ))}
-            </select>
+            </datalist>
           </div>
 
-          {/* Ano (Input numérico) */}
+          {/* Ano (Input texto) */}
           <div className="col-md-6">
             <label htmlFor="ano" className="form-label">Ano do Veículo:</label>
             <input
               id="ano"
-              type="number"
+              type="text"
               name="ano"
               placeholder="Ex: 2020"
               value={form.ano}
               onChange={handleInputChange}
               required
-              min="1900"
-              max={new Date().getFullYear() + 2}
               className="form-control"
             />
           </div>
@@ -249,24 +271,19 @@ const EditarAnuncio = () => {
             />
           </div>
 
-          {/* Valor (Input numérico) */}
+          {/* Valor (Input texto) */}
           <div className="col-md-6">
             <label htmlFor="valor" className="form-label">Valor (R$):</label>
-            <div className="input-group">
-              <span className="input-group-text">R$</span>
-              <input
-                id="valor"
-                type="number"
-                name="valor"
-                placeholder="Ex: 50000.00"
-                value={form.valor}
-                onChange={handleInputChange}
-                required
-                step="0.01"
-                min="0"
-                className="form-control"
-              />
-            </div>
+            <input
+              id="valor"
+              type="text"
+              name="valor"
+              placeholder="Ex: 50000.00"
+              value={form.valor}
+              onChange={handleInputChange}
+              required
+              className="form-control"
+            />
           </div>
 
           {/* Descrição (Textarea) */}
@@ -295,7 +312,7 @@ const EditarAnuncio = () => {
                   placeholder={`Link da Foto ${index + 1}`}
                   value={foto}
                   onChange={(e) => handleFotoChange(index, e.target.value)}
-                  required={index === 0} // Apenas a primeira foto é obrigatória?
+                  required={index === 0} // Apenas a primeira foto é obrigatória
                 />
                 {fotos.length > 1 && (
                   <button
@@ -340,4 +357,3 @@ const EditarAnuncio = () => {
 };
 
 export default EditarAnuncio;
-

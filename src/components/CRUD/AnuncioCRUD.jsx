@@ -90,15 +90,32 @@ export const editarAnuncio = async (idAnuncio, dadosUpdate) => {
             body: JSON.stringify(dadosUpdate),
         });
 
-        if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.error || `Erro ${response.status} ao editar anúncio.`);
+        // Capturar o texto completo da resposta para diagnóstico
+        const responseText = await response.text();
+        console.log(`Resposta completa do servidor (status ${response.status}):`, responseText);
+        
+        let errorMessage = `Erro ${response.status} ao editar anúncio.`;
+        let errorDetails = '';
+        
+        // Tentar analisar a resposta como JSON, se possível
+        try {
+            const responseData = JSON.parse(responseText);
+            if (!response.ok) {
+                errorMessage = responseData.error || errorMessage;
+                errorDetails = responseData.details || '';
+            } else {
+                console.log('Anúncio editado com sucesso:', responseData);
+                alert('Anúncio atualizado com sucesso!');
+                return responseData;
+            }
+        } catch (parseError) {
+            // Se não for JSON válido, usar o texto bruto
+            console.error('Erro ao analisar resposta JSON:', parseError);
+            errorDetails = responseText;
         }
-
-        const data = await response.json();
-        console.log('Anúncio editado com sucesso:', data);
-        alert('Anúncio atualizado com sucesso!');
-        return data;
+        
+        // Se chegou aqui, houve erro
+        throw new Error(`${errorMessage}${errorDetails ? ` Detalhes: ${errorDetails}` : ''}`);
 
     } catch (error) {
         console.error('Erro ao editar anúncio:', error);

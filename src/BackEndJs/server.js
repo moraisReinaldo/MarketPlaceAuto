@@ -1,4 +1,3 @@
-
 import express from 'express';
 import cors from 'cors';
 import bcrypt from 'bcrypt';
@@ -88,9 +87,16 @@ app.post('/pessoas', async (req, res) => {
     }
 
     try {
-        const existingUser = await queryDB('SELECT CodPessoa FROM Pessoa WHERE usuario = ?', [usuario]);
-        if (existingUser.length > 0) {
-            return res.status(409).json({ error: 'Usuário já cadastrado.' });
+        // Verificar se já existe usuário com o mesmo nome de usuário
+        const existingUsername = await queryDB('SELECT CodPessoa FROM Pessoa WHERE usuario = ?', [usuario]);
+        if (existingUsername.length > 0) {
+            return res.status(409).json({ error: 'Nome de usuário já cadastrado.' });
+        }
+
+        // Verificar se já existe usuário com o mesmo nome completo
+        const existingName = await queryDB('SELECT CodPessoa FROM Pessoa WHERE nome = ?', [nome]);
+        if (existingName.length > 0) {
+            return res.status(409).json({ error: 'Nome já cadastrado. Por favor, use um nome diferente.' });
         }
 
         const hashedSenha = await bcrypt.hash(senha, saltRounds);
@@ -203,9 +209,16 @@ app.get('/modelos', async (req, res) => {
 app.get('/versoes/:codModelo', async (req, res) => {
     const { codModelo } = req.params;
     try {
-        // Busca versões, incluindo o ano de referência da versão
-        const rows = await queryDB('SELECT CodVersao, nome, ano FROM Versao WHERE CodModelo = ? ORDER BY nome, ano DESC', [codModelo]);
-        res.json(rows);
+        // Busca versões sem o campo ano (removido da tabela)
+        const rows = await queryDB('SELECT CodVersao, nome FROM Versao WHERE CodModelo = ? ORDER BY nome', [codModelo]);
+        
+        // Adiciona um campo ano padrão para compatibilidade com o frontend
+        const versoes = rows.map(versao => ({
+            ...versao,
+            ano: null // Valor padrão para manter compatibilidade
+        }));
+        
+        res.json(versoes);
     } catch (err) {
         console.error('Erro ao buscar versões:', err.message);
         res.status(500).json({ error: 'Erro interno ao buscar versões.' });
@@ -222,7 +235,7 @@ app.get('/anuncios', async (req, res) => {
             SELECT 
                 a.CodAnuncio, a.valor, a.descricao, a.local, a.ano, -- Selecionar a.ano e a.local
                 p.CodPessoa, p.nome as nomeVendedor,
-                v.CodVersao, v.nome as nomeVersao, -- v.ano não é mais necessário aqui se temos a.ano
+                v.CodVersao, v.nome as nomeVersao, 
                 m.CodModelo, m.nome as nomeModelo
             FROM Anuncio a
             JOIN Pessoa p ON a.CodPessoa = p.CodPessoa
@@ -282,7 +295,7 @@ app.get('/anuncios/:id', async (req, res) => {
             SELECT 
                 a.CodAnuncio, a.valor, a.descricao, a.local, a.ano, -- Selecionar a.ano e a.local
                 p.CodPessoa, p.nome as nomeVendedor,
-                v.CodVersao, v.nome as nomeVersao, -- v.ano não é mais necessário aqui
+                v.CodVersao, v.nome as nomeVersao,
                 m.CodModelo, m.nome as nomeModelo
             FROM Anuncio a
             JOIN Pessoa p ON a.CodPessoa = p.CodPessoa
@@ -652,4 +665,3 @@ app.listen(PORT, () => {
             console.error('Erro ao conectar ao banco MySQL:', err);
         });
 });
-

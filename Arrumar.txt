@@ -1,3 +1,0 @@
-Botões sumidos, editar e apagar para o usuario dono do anuncio 
-Arrumar o banco para se adequar a norma 
-iniciar conversa 
